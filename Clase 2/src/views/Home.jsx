@@ -204,26 +204,26 @@ export const Home = () => {
                 id="searchInput"
                 placeholder="Buscar por nombre"
                 ref={searchInputRef}
-                // onKeyDown={(e) =>
-                //   e.code == "Enter"
-                //     ?   searchWithOptions({
-                //       setState: setData,
-                //       setLoading: setLoading,
-                //       valueSearchInput: searchInputRef.current.value,
-                //       valueCategoryInput: priceInputRef.current.value,
-                //       valuePriceInput: categoryInputRef.current.value,
-                //     })
-                //     : ""
-                // }
                 onKeyDown={(e) =>
                   e.code == "Enter"
-                    ? searchByNameHandler({
-                        setState: setData,
-                        setLoading: setLoading,
-                        value: searchInputRef.current.value,
-                      })
+                    ?   searchWithOptions({
+                      setState: setData,
+                      setLoading: setLoading,
+                      valueSearchInput: searchInputRef.current.value,
+                      valueCategoryInput: priceInputRef.current.value,
+                      valuePriceInput: categoryInputRef.current.value,
+                    })
                     : ""
                 }
+                // onKeyDown={(e) =>
+                //   e.code == "Enter"
+                //     ? searchByNameHandler({
+                //         setState: setData,
+                //         setLoading: setLoading,
+                //         value: searchInputRef.current.value,
+                //       })
+                //     : ""
+                // }
               />
             </div>
           </div>
