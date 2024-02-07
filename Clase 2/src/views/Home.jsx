@@ -12,15 +12,84 @@ import Image from "react-bootstrap/Image";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const searchByNameHandler = async ({setState, setLoading, value}) => {
-  console.log(value);
+  setLoading(true)
+  try {
+    const res = await fetch(`${BASE_URL}/product/name/${value}`,{
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+    })
+
+    const data = await res.json();
+
+    if (res.status == 200) {
+      setState(data);
+    }
+
+    if (res.status == 404 || res.status == 500 ) {
+      setState(null);
+    }
+
+
+  } catch (error) {
+    
+  }finally{
+    setLoading(false)
+  }
 };
 
 const sortByPriceHandler = async ({setState, setLoading, value}) => {
-console.log(value);
+setLoading(true)
+try {
+  const res = await fetch(`${BASE_URL}/product/order/${value}`,{
+    headers: {
+      "content-type": "application/json",
+    },
+    method: "GET",
+  })
+  const data = await res.json();
+
+  if (res.status == 200) {
+    setState(data);
+  }
+
+  if (res.status == 404 || res.status == 500 ) {
+    setState(null);
+  }
+
+} catch (error) {
+   console.log(error);
+}finally{
+  setLoading(false)
+}
 };
 
 const sortByCategoryHandler = async ({setState, setLoading, value}) => {
-  console.log(value);
+  setLoading(true);
+  try {
+    const res = await fetch(`${BASE_URL}/product/category/${value}`, {
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+    });
+
+    const data = await res.json();
+
+    if (res.status == 200) {
+      setState(data);
+    }
+
+    if (res.status == 404 || res.status == 500 ) {
+      setState(null);
+    }
+
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
 };
 
 const searchWithOptions = async ({
@@ -44,13 +113,15 @@ const fetchAllProducts = async (setState, setLoading) => {
     });
 
     const data = await res.json();
+
     if (res.status == 200) {
       setState(data);
     }
 
-    if (res.status == 404) {
+    if (res.status == 404 || res.status == 500 ) {
       setState(null);
     }
+
   } catch (error) {
     console.log(error);
   } finally {
@@ -58,8 +129,8 @@ const fetchAllProducts = async (setState, setLoading) => {
   }
 };
 
-const createProduct = async (setLoading, formData) =>{
-           
+const createProduct = async ({setLoading, formData}) =>{
+   console.log(formData);
 }
 
 const renderHandler = (data, loading) => {

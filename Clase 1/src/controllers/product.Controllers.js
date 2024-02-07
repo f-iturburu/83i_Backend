@@ -69,8 +69,84 @@ export const findByIdAndDelete = (req, res) => {
 
 export const searchWithOptions = (req, res) => {
   const { category, name, price } = req.query;
-  console.log(category);
-  console.log(price);
-  console.log(name);
-  res.status(200)
+
+  let filteredProducts = []
+  
+  if (category && name && price) {
+    filteredProducts = productsDb.filter(product => product.category == category)
+    filteredProducts.filter(product => product.name.toLowerCase().includes(name)) 
+    filteredProducts.sort((a,b) => price == "asc" ?  a - b : b - a )
+
+    if (!filteredProducts.length) {
+      return res.status(404).json({message: "Producto no encontrado"})
+    }
+
+    return res.status(200).json({filteredProducts})
+  }
+
+  if (category && name) {
+    filteredProducts = productsDb.filter(product => product.category == category)
+    filteredProducts.filter(product => product.name.toLowerCase().includes(name)) 
+
+    if (!filteredProducts.length) {
+      return res.status(404).json({message: "Producto no encontrado"})
+    }
+
+    return res.status(200).json({filteredProducts})
+  }
+
+  if (name && price) {
+    filteredProducts = productsDb.filter(product => product.name.toLowerCase().includes(name)) 
+    filteredProducts.sort((a,b) => price == "asc" ?  a - b : b - a )
+
+    if (!filteredProducts.length) {
+      return res.status(404).json({message: "Producto no encontrado"})
+    }
+    
+    return res.status(200).json({filteredProducts})
+  }
+
+  if (category && price) {
+    filteredProducts = productsDb.filter(product => product.category == category)
+    filteredProducts.sort((a,b) => price == "asc" ?  a - b : b - a )
+     
+    if (!filteredProducts.length) {
+      return res.status(404).json({message: "Producto no encontrado"})
+    }
+
+    return res.status(200).json({filteredProducts})
+  }
+
+  if (price) {
+    if (order == "asc") {
+      filteredProducts = productsDb.sort((a, b) => a.price - b.price);
+      return res.status(200).json(filteredProducts);
+    }
+  
+    if (order == "desc") {
+      filteredProducts = productsDb.sort((a, b) => b.price - a.price);
+      return res.status(200).json(filteredProducts);
+    }
+  
+    if (order == "disc") {
+      filteredProducts = productsDb.filter(product => product.discountPercentage)
+      return res.status(200).json(filteredProducts);
+    }
+  }
+
+  if (name) {
+    const query = name.toLowerCase().trim()
+    const filteredProducts = productsDb.filter(product => product.name.toLowerCase().includes(name))
+  
+    if (!filteredProducts.length) {
+      return res.status(404).json({message: "Producto no encontrado"})
+    }
+  
+    return res.status(200).json(filteredProducts);
+  }
+
+  if (category) {
+    const filteredProducts = productsDb.filter(product => product.category == category)
+    return res.status(200).json(filteredProducts);
+  }
 };
