@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+*, 
+*:after,
+*:before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.bgFooter{
+  background-color: rgb(15, 15, 15);
+}
+
+.hidden{
+  visibility: hidden;
+}
+
+.bi-instagram:hover {
+    background: radial-gradient(
+      circle at 30% 107%,
+      #fdf497 0%,
+      #fdf497 5%,
+      #fd5949 45%,
+      #d6249f 60%,
+      #285aeb 90%
+    );
+
+    -webkit-background-clip: text;
+  
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    transition:all 1s;
+  }
+
+  .bi-facebook:hover{
+    color: #4267B2;
+    transition:all 1s;
+  }
+
+  .bi-twitter:hover{
+    color: #1DA1F2;
+    transition:all 1s;
+  }
+
+  .bi-youtube:hover{
+    color: #FF0000;
+    transition:all 1s;
+  }
+
+  .card:hover{
+    transform: scale(1.02);
+    box-shadow: 22px 20px 19px -3px rgba(243, 243, 243, 0.1);
+    transition:all 0.4s;
+  }
+
+.vh-50{
+  min-height: 50vh;
+}
