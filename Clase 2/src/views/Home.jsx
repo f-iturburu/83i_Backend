@@ -11,15 +11,15 @@ import Image from "react-bootstrap/Image";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const searchByNameHandler = async ({setState, setLoading, value}) => {
-  setLoading(true)
+const searchByNameHandler = async ({ setState, setLoading, value }) => {
+  setLoading(true);
   try {
-    const res = await fetch(`${BASE_URL}/product/name/${value}`,{
+    const res = await fetch(`${BASE_URL}/product/name/${value}`, {
       headers: {
         "content-type": "application/json",
       },
       method: "GET",
-    })
+    });
 
     const data = await res.json();
 
@@ -27,45 +27,41 @@ const searchByNameHandler = async ({setState, setLoading, value}) => {
       setState(data);
     }
 
-    if (res.status == 404 || res.status == 500 ) {
+    if (res.status == 404 || res.status == 500) {
       setState(null);
     }
-
-
   } catch (error) {
-    
-  }finally{
-    setLoading(false)
+  } finally {
+    setLoading(false);
   }
 };
 
-const sortByPriceHandler = async ({setState, setLoading, value}) => {
-setLoading(true)
-try {
-  const res = await fetch(`${BASE_URL}/product/order/${value}`,{
-    headers: {
-      "content-type": "application/json",
-    },
-    method: "GET",
-  })
-  const data = await res.json();
+const sortByPriceHandler = async ({ setState, setLoading, value }) => {
+  setLoading(true);
+  try {
+    const res = await fetch(`${BASE_URL}/product/order/${value}`, {
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+    });
+    const data = await res.json();
 
-  if (res.status == 200) {
-    setState(data);
+    if (res.status == 200) {
+      setState(data);
+    }
+
+    if (res.status == 404 || res.status == 500) {
+      setState(null);
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
   }
-
-  if (res.status == 404 || res.status == 500 ) {
-    setState(null);
-  }
-
-} catch (error) {
-   console.log(error);
-}finally{
-  setLoading(false)
-}
 };
 
-const sortByCategoryHandler = async ({setState, setLoading, value}) => {
+const sortByCategoryHandler = async ({ setState, setLoading, value }) => {
   setLoading(true);
   try {
     const res = await fetch(`${BASE_URL}/product/category/${value}`, {
@@ -81,10 +77,9 @@ const sortByCategoryHandler = async ({setState, setLoading, value}) => {
       setState(data);
     }
 
-    if (res.status == 404 || res.status == 500 ) {
+    if (res.status == 404 || res.status == 500) {
       setState(null);
     }
-
   } catch (error) {
     console.log(error);
   } finally {
@@ -99,7 +94,11 @@ const searchWithOptions = async ({
   valueCategoryInput,
   valuePriceInput,
 }) => {
-  console.log(valueSearchInput, valueCategoryInput,valuePriceInput);
+  console.log({
+    valueSearchInput: valueSearchInput,
+    valueCategoryInput: valueCategoryInput,
+    valuePriceInput: valuePriceInput,
+  });
 };
 
 const fetchAllProducts = async (setState, setLoading) => {
@@ -118,10 +117,9 @@ const fetchAllProducts = async (setState, setLoading) => {
       setState(data);
     }
 
-    if (res.status == 404 || res.status == 500 ) {
+    if (res.status == 404 || res.status == 500) {
       setState(null);
     }
-
   } catch (error) {
     console.log(error);
   } finally {
@@ -129,9 +127,9 @@ const fetchAllProducts = async (setState, setLoading) => {
   }
 };
 
-const createProduct = async ({setLoading, formData}) =>{
-   console.log(formData);
-}
+const createProduct = async ({ setLoading, formData }) => {
+  console.log(formData);
+};
 
 const renderHandler = (data, loading) => {
   if (loading) {
@@ -179,14 +177,14 @@ export const Home = () => {
     setFormDiscount(false);
     setFormAddImage(null);
   };
-  
+
   const handleShow = () => setShow(true);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const form = addFormRef.current;
     const data = Object.fromEntries(new FormData(form));
-    createProduct({setCreateProductLoading, data})
+    createProduct({ setCreateProductLoading, data });
     console.log(data);
   };
 
@@ -219,11 +217,11 @@ export const Home = () => {
                 // }
                 onKeyDown={(e) =>
                   e.code == "Enter"
-                    ?   searchByNameHandler({
-                      setState: setData,
-                      setLoading: setLoading,
-                      value: searchInputRef.current.value,
-                    })
+                    ? searchByNameHandler({
+                        setState: setData,
+                        setLoading: setLoading,
+                        value: searchInputRef.current.value,
+                      })
                     : ""
                 }
               />
@@ -233,26 +231,26 @@ export const Home = () => {
             <Form.Select
               className="form-select"
               id="priceSelect"
-              defaultValue={"default"}
+              defaultValue={""}
               ref={priceInputRef}
-              // onChange={() =>
-              //   searchWithOptions({
-              //     setState: setData,
-              //     setLoading: setLoading,
-              //     valueSearchInput: searchInputRef.current.value,
-              //     valueCategoryInput: priceInputRef.current.value,
-              //     valuePriceInput: categoryInputRef.current.value,
-              //   })
-              // }
               onChange={() =>
-                sortByPriceHandler({
+                searchWithOptions({
                   setState: setData,
                   setLoading: setLoading,
-                  value: priceInputRef.current.value,
+                  valueSearchInput: searchInputRef.current.value,
+                  valueCategoryInput: priceInputRef.current.value,
+                  valuePriceInput: categoryInputRef.current.value,
                 })
               }
+              // onChange={() =>
+              //   sortByPriceHandler({
+              //     setState: setData,
+              //     setLoading: setLoading,
+              //     value: priceInputRef.current.value,
+              //   })
+              // }
             >
-              <option disabled hidden value="default">
+              <option disabled hidden value="">
                 Filtrar por precio
               </option>
               <option value="asc">Precio ascendente</option>
@@ -264,26 +262,26 @@ export const Home = () => {
             <Form.Select
               className="form-select"
               id="categorySelect"
-              defaultValue={"default"}
+              defaultValue={""}
               ref={categoryInputRef}
-              // onChange={(e) =>
-              //   searchWithOptions({
-              //     setState: setData,
-              //     setLoading: setLoading,
-              //     valueSearchInput: searchInputRef.current.value,
-              //     valueCategoryInput: priceInputRef.current.value,
-              //     valuePriceInput: categoryInputRef.current.value,
-              //   })
-              // }
-              onChange={() =>
-                sortByCategoryHandler({
+              onChange={(e) =>
+                searchWithOptions({
                   setState: setData,
                   setLoading: setLoading,
-                  value: categoryInputRef.current.value,
+                  valueSearchInput: searchInputRef.current.value,
+                  valueCategoryInput: priceInputRef.current.value,
+                  valuePriceInput: categoryInputRef.current.value,
                 })
               }
+              // onChange={() =>
+              //   sortByCategoryHandler({
+              //     setState: setData,
+              //     setLoading: setLoading,
+              //     value: categoryInputRef.current.value,
+              //   })
+              // }
             >
-              <option disabled hidden value="default">
+              <option disabled hidden value="">
                 Filtrar por categoria
               </option>
               <option value="mug">Tazas</option>
