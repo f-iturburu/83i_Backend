@@ -94,11 +94,36 @@ const searchWithOptions = async ({
   valueCategoryInput,
   valuePriceInput,
 }) => {
-  console.log({
-    valueSearchInput: valueSearchInput,
-    valueCategoryInput: valueCategoryInput,
-    valuePriceInput: valuePriceInput,
-  });
+
+  const queryParams = {
+    name: valueSearchInput,
+    price: valueCategoryInput,
+    category: valuePriceInput,
+  };
+
+  let queryString = "?";
+  
+  for (const key in queryParams) {
+    if (queryParams[key]) {
+      queryString.length == 1
+        ? (queryString += `${key}=${queryParams[key]}`)
+        : (queryString += `&${key}=${queryParams[key]}`);
+    }
+  }
+
+  // for (let i = 0; i < Object.keys(queryParams).length; i++) {
+  //   if (Object.values(queryParams)[i] && queryString.length !== 1) {
+  //     queryString += `&${Object.keys(queryParams)[i]}=${
+  //       Object.values(queryParams)[i]
+  //     }`;
+  //   } else if (Object.values(queryParams)[i]) {
+  //     queryString += `${Object.keys(queryParams)[i]}=${
+  //       Object.values(queryParams)[i]
+  //     }`;
+  //   }
+  // }
+
+  console.log(`${BASE_URL}/products/search${queryString}`);
 };
 
 const fetchAllProducts = async (setState, setLoading) => {
@@ -206,13 +231,13 @@ export const Home = () => {
                 ref={searchInputRef}
                 onKeyDown={(e) =>
                   e.code == "Enter"
-                    ?   searchWithOptions({
-                      setState: setData,
-                      setLoading: setLoading,
-                      valueSearchInput: searchInputRef.current.value,
-                      valueCategoryInput: priceInputRef.current.value,
-                      valuePriceInput: categoryInputRef.current.value,
-                    })
+                    ? searchWithOptions({
+                        setState: setData,
+                        setLoading: setLoading,
+                        valueSearchInput: searchInputRef.current.value,
+                        valueCategoryInput: priceInputRef.current.value,
+                        valuePriceInput: categoryInputRef.current.value,
+                      })
                     : ""
                 }
                 // onKeyDown={(e) =>

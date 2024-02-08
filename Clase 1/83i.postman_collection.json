@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "7e33a168-83b2-42d7-9da2-5930bbf4aea3",
+		"_postman_id": "1822a7a3-8161-46cb-a5a7-b801bc7c2c12",
 		"name": "83i",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "26767695",
-		"_collection_link": "https://www.postman.com/restless-robot-203448/workspace/rolling-code-school/collection/26767695-7e33a168-83b2-42d7-9da2-5930bbf4aea3?action=share&source=collection_link&creator=26767695"
+		"_collection_link": "https://www.postman.com/restless-robot-203448/workspace/rolling-code-school/collection/26767695-1822a7a3-8161-46cb-a5a7-b801bc7c2c12?action=share&source=collection_link&creator=26767695"
 	},
 	"item": [
 		{
@@ -45,32 +45,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "sortByPrice",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/product/order/:order",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"product",
-								"order",
-								":order"
-							],
-							"variable": [
-								{
-									"key": "order",
-									"value": ""
+									"value": "6c03401c-6543-11ee-8c99-0242ac120002"
 								}
 							]
 						}
@@ -95,7 +70,32 @@
 							"variable": [
 								{
 									"key": "category",
-									"value": ""
+									"value": "remeras"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sortByPrice",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/product/order/:order",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"product",
+								"order",
+								":order"
+							],
+							"variable": [
+								{
+									"key": "order",
+									"value": "desc"
 								}
 							]
 						}
@@ -120,7 +120,39 @@
 							"variable": [
 								{
 									"key": "searchQuery",
-									"value": ""
+									"value": "Bot"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchWithOptions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/products/search?id=1&price=25&category=hat",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "price",
+									"value": "25"
+								},
+								{
+									"key": "category",
+									"value": "hat"
 								}
 							]
 						}
@@ -198,14 +230,6 @@
 								}
 							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "searchWithOptions",
-					"request": {
-						"method": "GET",
-						"header": []
 					},
 					"response": []
 				}
