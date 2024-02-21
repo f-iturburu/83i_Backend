@@ -5,104 +5,154 @@ import Form from "react-bootstrap/Form";
 import { Spinner } from "react-bootstrap";
 import { ProductNotFoundMessage } from "../components/ProductNotFoundMessage";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import Placeholder from "react-bootstrap/Placeholder";
 import Image from "react-bootstrap/Image";
-
+import { useSearchParams } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+import axios from "axios";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const searchByNameHandler = async ({ setState, setLoading, value }) => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${BASE_URL}/product/name/${value}`, {
-      headers: {
-        "content-type": "application/json",
-      },
-      method: "GET",
-    });
+// const searchByNameHandler = async (setState, setLoading, value) => {
+//   setLoading(true);
+//   try {
+//     const res = await fetch(`${BASE_URL}/product/name/${value}`, {
+//       headers: {
+//         "content-type": "application/json",
+//       },
+//       method: "GET",
+//     });
+//     const data = await res.json();
 
-    const data = await res.json();
+//     if (res.status == 200) {
+//       setState(data);
+//     }
 
-    if (res.status == 200) {
-      setState(data);
-    }
+//     if (res.status == 404) {
+//       setState(null);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
-    if (res.status == 404 || res.status == 500) {
-      setState(null);
-    }
-  } catch (error) {
-  } finally {
-    setLoading(false);
-  }
-};
+// const sortByPriceHandler = async (setState, setLoading, value) => {
+//   setLoading(true);
+//   try {
+//     const res = await fetch(`${BASE_URL}/product/order/${value}`, {
+//       headers: {
+//         "content-type": "application/json",
+//       },
+//       method: "GET",
+//     });
 
-const sortByPriceHandler = async ({ setState, setLoading, value }) => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${BASE_URL}/product/order/${value}`, {
-      headers: {
-        "content-type": "application/json",
-      },
-      method: "GET",
-    });
-    const data = await res.json();
+//     const data = await res.json();
 
-    if (res.status == 200) {
-      setState(data);
-    }
+//     if (res.status == 200) {
+//       setState(data);
+//     }
 
-    if (res.status == 404 || res.status == 500) {
-      setState(null);
-    }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setLoading(false);
-  }
-};
+//     if (res.status == 404) {
+//       setState(null);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
-const sortByCategoryHandler = async ({ setState, setLoading, value }) => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${BASE_URL}/product/category/${value}`, {
-      headers: {
-        "content-type": "application/json",
-      },
-      method: "GET",
-    });
+// const sortByCategoryHandler = async (setState, setLoading, value) => {
+//   setLoading(true);
+//   try {
+//     const res = await fetch(`${BASE_URL}/product/category/${value}`, {
+//       headers: {
+//         "content-type": "application/json",
+//       },
+//       method: "GET",
+//     });
 
-    const data = await res.json();
+//     const data = await res.json();
 
-    if (res.status == 200) {
-      setState(data);
-    }
+//     if (res.status == 200) {
+//       setState(data);
+//     }
 
-    if (res.status == 404 || res.status == 500) {
-      setState(null);
-    }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setLoading(false);
-  }
-};
+//     if (res.status == 404) {
+//       setState(null);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+// const fetchAllProducts = async (setState, setLoading) => {
+//   setLoading(true);
+//   try {
+//     const res = await fetch(`${BASE_URL}/products`, {
+//       headers: {
+//         "content-type": "application/json",
+//       },
+//       method: "GET",
+//     });
+
+//     const data = await res.json();
+//     if (res.status == 200) {
+//       setState(data);
+//     }
+
+//     if (res.status == 404) {
+//       setState(null);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
 const searchWithOptions = async ({
   setState,
   setLoading,
+  queryParams
+}) => {
+  setLoading(true);
+
+  try {
+    const res = await axios.get(`${BASE_URL}/products/search${queryParams}`);
+    const data = res.data;
+
+    if (res.status == 200) {
+      setState(data);
+    }
+
+    if (res.status == 404 || res.status == 500) {
+      setState(null);
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleQueryParams = ({
   valueSearchInput,
   valueCategoryInput,
   valuePriceInput,
+  setQueryParams,
 }) => {
-
   const queryParams = {
     name: valueSearchInput,
-    price: valueCategoryInput,
-    category: valuePriceInput,
+    price: valuePriceInput,
+    category: valueCategoryInput,
   };
 
   let queryString = "?";
-  
+
   for (const key in queryParams) {
     if (queryParams[key]) {
       queryString.length == 1
@@ -111,49 +161,27 @@ const searchWithOptions = async ({
     }
   }
 
-  // for (let i = 0; i < Object.keys(queryParams).length; i++) {
-  //   if (Object.values(queryParams)[i] && queryString.length !== 1) {
-  //     queryString += `&${Object.keys(queryParams)[i]}=${
-  //       Object.values(queryParams)[i]
-  //     }`;
-  //   } else if (Object.values(queryParams)[i]) {
-  //     queryString += `${Object.keys(queryParams)[i]}=${
-  //       Object.values(queryParams)[i]
-  //     }`;
-  //   }
-  // }
+  setQueryParams(queryString)
 
-  console.log(`${BASE_URL}/products/search${queryString}`);
-};
+  // * let queryString = "?";
 
-const fetchAllProducts = async (setState, setLoading) => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${BASE_URL}/products`, {
-      headers: {
-        "content-type": "application/json",
-      },
-      method: "GET",
-    });
+  // * if (valueCategoryInput) {
+  // *  queryString.length == 1
+  // *    ? (queryString += `category=${category}`)
+  // *    : (queryString += `&category=${category}`);
+  // * }
 
-    const data = await res.json();
+  // * if (valuePriceInput) {
+  // *  queryString.length == 1
+  // *    ? (queryString += `price=${price}`)
+  // *    : (queryString += `&price=${price}`);
+  // * }
 
-    if (res.status == 200) {
-      setState(data);
-    }
-
-    if (res.status == 404 || res.status == 500) {
-      setState(null);
-    }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setLoading(false);
-  }
-};
-
-const createProduct = async ({ setLoading, formData }) => {
-  console.log(formData);
+  // * if (valueSearchInput) {
+  // *  queryString.length == 1
+  // *    ? (queryString += `name=${name}`)
+  // *   : (queryString += `&name=${name}`);
+  // * }
 };
 
 const renderHandler = (data, loading) => {
@@ -179,38 +207,23 @@ const renderHandler = (data, loading) => {
 export const Home = () => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-  const [createProductLoading, setCreateProductLoading] = useState(false);
-  const [show, setShow] = useState(false);
-  const [formDiscount, setFormDiscount] = useState(false);
-  const [formAddImage, setFormAddImage] = useState(null);
+  const [queryParams, setQueryParams] = useSearchParams();
+  const location = useLocation();
   const searchInputRef = useRef();
   const priceInputRef = useRef();
   const categoryInputRef = useRef();
   const searchFormRef = useRef();
-  const addFormRef = useRef();
 
-  useEffect(() => {
-    fetchAllProducts(setData, setLoading);
-  }, []);
+  // useEffect(() => {
+  //   searchWithOptions(setData, setLoading, searchParams);
+  // }, []);
+
+  useEffect(()=>{
+    searchWithOptions({setState: setData, setLoading: setLoading, queryParams: location.search});
+  },[queryParams])
 
   const submitHandler = (e) => {
     e.preventDefault();
-  };
-
-  const handleClose = () => {
-    setShow(false);
-    setFormDiscount(false);
-    setFormAddImage(null);
-  };
-
-  const handleShow = () => setShow(true);
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    const form = addFormRef.current;
-    const data = Object.fromEntries(new FormData(form));
-    createProduct({ setCreateProductLoading, data });
-    console.log(data);
   };
 
   return (
@@ -231,24 +244,14 @@ export const Home = () => {
                 ref={searchInputRef}
                 onKeyDown={(e) =>
                   e.code == "Enter"
-                    ? searchWithOptions({
-                        setState: setData,
-                        setLoading: setLoading,
+                    ? handleQueryParams({
                         valueSearchInput: searchInputRef.current.value,
-                        valueCategoryInput: priceInputRef.current.value,
-                        valuePriceInput: categoryInputRef.current.value,
+                        valueCategoryInput: categoryInputRef.current.value,
+                        valuePriceInput: priceInputRef.current.value,
+                        setQueryParams: setQueryParams
                       })
                     : ""
                 }
-                // onKeyDown={(e) =>
-                //   e.code == "Enter"
-                //     ? searchByNameHandler({
-                //         setState: setData,
-                //         setLoading: setLoading,
-                //         value: searchInputRef.current.value,
-                //       })
-                //     : ""
-                // }
               />
             </div>
           </div>
@@ -258,22 +261,14 @@ export const Home = () => {
               id="priceSelect"
               defaultValue={""}
               ref={priceInputRef}
-              onChange={() =>
-                searchWithOptions({
-                  setState: setData,
-                  setLoading: setLoading,
+              onChange={(e) =>
+                handleQueryParams({
                   valueSearchInput: searchInputRef.current.value,
-                  valueCategoryInput: priceInputRef.current.value,
-                  valuePriceInput: categoryInputRef.current.value,
+                  valueCategoryInput: categoryInputRef.current.value,
+                  valuePriceInput: priceInputRef.current.value,
+                  setQueryParams: setQueryParams
                 })
               }
-              // onChange={() =>
-              //   sortByPriceHandler({
-              //     setState: setData,
-              //     setLoading: setLoading,
-              //     value: priceInputRef.current.value,
-              //   })
-              // }
             >
               <option disabled hidden value="">
                 Filtrar por precio
@@ -290,21 +285,13 @@ export const Home = () => {
               defaultValue={""}
               ref={categoryInputRef}
               onChange={(e) =>
-                searchWithOptions({
-                  setState: setData,
-                  setLoading: setLoading,
+                handleQueryParams({
                   valueSearchInput: searchInputRef.current.value,
-                  valueCategoryInput: priceInputRef.current.value,
-                  valuePriceInput: categoryInputRef.current.value,
+                  valueCategoryInput: categoryInputRef.current.value,
+                  valuePriceInput: priceInputRef.current.value,
+                  setQueryParams: setQueryParams
                 })
               }
-              // onChange={() =>
-              //   sortByCategoryHandler({
-              //     setState: setData,
-              //     setLoading: setLoading,
-              //     value: categoryInputRef.current.value,
-              //   })
-              // }
             >
               <option disabled hidden value="">
                 Filtrar por categoria
@@ -323,7 +310,7 @@ export const Home = () => {
               onClick={(e) => {
                 e.preventDefault();
                 searchFormRef.current.reset();
-                fetchAllProducts(setData, setLoading);
+                setQueryParams();
               }}
             >
               Limpiar filtros
@@ -331,107 +318,9 @@ export const Home = () => {
           </div>
         </Form>
       </section>
-      <section className="container w-100 d-flex justify-content-end mt-2">
-        <Button
-          variant="outline-light"
-          className="ms-auto rounded-2"
-          onClick={handleShow}
-        >
-          <i className="bi bi-plus-lg"></i> Agregar Producto
-        </Button>
-      </section>
       <section className="container my-5 vh-50">
         <div className="row">{renderHandler(data, loading)}</div>
       </section>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-        size="lg"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Agregar producto</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form ref={addFormRef} onSubmit={handleFormSubmit}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control name="name" type="text" />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Precio</Form.Label>
-              <Form.Control name="price" type="number" />
-            </Form.Group>
-            <Form.Select
-              className="form-select mb-3"
-              id="categorySelect"
-              defaultValue={"default"}
-              name="category"
-            >
-              <option disabled hidden value="default">
-                Elegir categoria
-              </option>
-              <option value="mug">Tazas</option>
-              <option value="notepad">Libretas</option>
-              <option value="keychain">Llaveros</option>
-              <option value="hat">Gorras</option>
-              <option value="bottle">Botellas</option>
-            </Form.Select>
-            <section className="w-100 d-flex justify-content-center">
-              <Image
-                src={
-                  formAddImage ? formAddImage : "/src/assets/placeholder.jpg"
-                }
-                style={{
-                  height: "612px",
-                  width: "612px",
-                  objectFit: "contain",
-                }}
-                rounded
-              />
-            </section>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Imagen</Form.Label>
-              <Form.Control
-                name="image"
-                onChange={(e) => setFormAddImage(e.target.value)}
-                type="text"
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check
-                type="checkbox"
-                onChange={() => setFormDiscount(!formDiscount)}
-                label="Descuento"
-              />
-            </Form.Group>
-
-            {formDiscount ? (
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Porcentaje de descuento </Form.Label>
-                <Form.Control name="discountPercenteage" type="number" />
-              </Form.Group>
-            ) : (
-              ""
-            )}
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="danger" onClick={handleClose}>
-            Cerrar
-          </Button>
-          <Button
-            variant="primary"
-            disabled={createProductLoading ? true : false}
-            onClick={handleFormSubmit}
-          >
-            {createProductLoading ? <Spinner size="sm" /> : "Guardar"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 };

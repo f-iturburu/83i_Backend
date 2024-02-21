@@ -3,6 +3,9 @@ import { imageRegex } from "../helpers/imageURLRegex.js";
 
 const productSchema = new Schema(
   {
+    userId : {
+      type: Schema.Types.ObjectId
+    },
     name: {
       type: String,
       required: [true, "Debe ingresar un nombre"],

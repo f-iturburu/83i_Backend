@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import { hashPassword } from "../helpers/hashPassword.js";
 import { comparePasswords } from "../helpers/comparePasswords.js";
+import { signToken } from "../helpers/signToken.js";
 
 export const create = async (req, res) => {
   const { email, password } = req.body;
@@ -12,25 +13,22 @@ export const create = async (req, res) => {
 
     newUser.password = await hashPassword(password);
     await newUser.save();
+    const token = signToken(newUser)
 
-    res.status(201).json({ message: "Usuario creado correctamente" });
+    res.status(201).json({ token:token });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
 
-  const user = await User.findOne({ email: email });
-
-  const validPassword = await comparePasswords(user.password, password);
-
-  if (!validPassword) {
-    return res.status(401).json({ message: "Email o contraseña incorrectos" });
-  }
-
+  const user = await User.findOne({email:email})
+  const token = signToken(user)
+  
   return res
     .status(200)
-    .json({ message: "El usuario se ha logeado exitosamente" });
+    .json({ token: token });
 };
+

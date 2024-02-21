@@ -1,10 +1,22 @@
 import Product from "../models/product.model.js";
+import User from "../models/user.model.js";
+import mongoose from "mongoose";
 
 export const createProduct = async (req, res) => {
   const { name, price, discountPercentage, category, visible, image } =
     req.body;
+
+  const { userToken } = req;
+
+  //  if (userToken.role !== "admin") {
+  //    return res.status(403).json({error: "Acceso denegado"})
+  //  }
+
+  const userFound = await User.findById(userToken.id)
+   
   try {
     const newProduct = await Product.create({
+      userId: userFound._id, 
       name: name,
       price: price,
       discountPercentage: discountPercentage,
@@ -15,11 +27,17 @@ export const createProduct = async (req, res) => {
 
     res.status(201).json({ id: newProduct._id });
   } catch (error) {
-    return res.status(500).json({ messagee: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (req, res) => { 
+  // const { userToken } = req;
+
+  // if (userToken.role !== "admin") {
+  //   return res.status(403).json({error: "Acceso denegado"})
+  // }
+
   try {
     const products = await Product.find();
     res.status(200).json(products);
@@ -30,6 +48,12 @@ export const getProducts = async (req, res) => {
 
 export const deleteById = async (req, res) => {
   const { id } = req.params;
+
+  const { userToken } = req;
+
+  if (userToken.role !== "admin") {
+    return res.status(403).json({error: "Acceso denegado"})
+  }
 
   try {
     const product = await Product.findById(id);
@@ -74,12 +98,10 @@ export const searchWithOptions = async (req, res) => {
     searchQuery.category = category;
   }
 
-
   if (price == "disc") {
     searchQuery.discountPercentage = { $exists: true };
   }
 
-  console.log(searchQuery);
   try {
     const products = await Product.find(searchQuery).sort({
       price: priceSortQuery,
@@ -98,11 +120,17 @@ export const searchWithOptions = async (req, res) => {
 export const edit = async (req, res) => {
   const { id } = req.params;
   const payload = req.body;
-  console.log(payload);
+
+  const { userToken } = req;
+
 
   try {
     const product = await Product.findById(id);
-
+   
+    if (String(userToken.id) !== String(product.userId) || userToken.role == "admin") {
+      return res.status(403).json({error: "Acceso denegado"})
+    }
+    
     if (product) {
       await Product.findByIdAndUpdate(id, payload);
       return res
@@ -115,3 +143,11 @@ export const edit = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllMyProducts = async (req,res) =>{
+  const { userToken } = req;
+
+  const products = await Product.find({userId : userToken.id})
+  
+  res.status(200).json(products)
+}

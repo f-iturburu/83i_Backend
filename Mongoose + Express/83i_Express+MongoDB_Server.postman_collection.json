@@ -70,7 +70,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "65cd035b0aa6f7a4ee3ce308"
+									"value": "65cd09f78b4e62c74316f7c9"
 								}
 							]
 						}
@@ -138,6 +138,15 @@
 					"request": {
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"visible\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{BASE_URL}}/product/:id",
 							"host": [
@@ -150,10 +159,18 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "65cd035b0aa6f7a4ee3ce308"
+									"value": "65cd09f78b4e62c74316f7c9"
 								}
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllMyProducts",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
@@ -193,6 +210,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"test5@gmail.com\",\r\n    \"password\" : \"Rolling83i\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{BASE_URL}}/login",
 							"host": [
